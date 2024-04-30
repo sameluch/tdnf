@@ -23,6 +23,7 @@ static const char *help_msg =
  "           [--downloadonly]\n"
  "           [--enablerepo=<repoid>]\n"
  "           [--enableplugin=<plugin_name>]\n"
+ "           [--snapshottime=<POSIX_time>]\n"
  "           [--exclude [file1,file2,...]]\n"
  "           [--installroot [path]]\n"
  "           [--noautoremove]\n"
