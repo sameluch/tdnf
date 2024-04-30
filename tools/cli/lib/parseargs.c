@@ -45,6 +45,7 @@ static struct option pstOptions[] =
     {"enableplugin",  required_argument, 0, 0},            //--enableplugin
     {"enablerepo",    required_argument, 0, 0},            //--enablerepo
     {"exclude",       required_argument, 0, 0},            //--exclude
+    {"excludesnapshot", required_argument, 0, 0},          //--excludesnapshot
     {"help",          no_argument, 0, 'h'},                //-h --help
     {"installroot",   required_argument, 0, 'i'},          //--installroot
     {"json",          no_argument, &_opt.nJsonOutput, 1},
@@ -70,6 +71,7 @@ static struct option pstOptions[] =
     {"skipdigest",    no_argument, 0, 0},                  //--skipdigest to skip verifying RPM digest
     {"skipobsoletes", no_argument, 0, 0},                  //--skipobsoletes to skip obsolete problems
     {"skipsignature", no_argument, 0, 0},                  //--skipsignature to skip verifying RPM signatures
+    {"snapshottime",  required_argument, 0, 0},            //--snapshottime
     {"source",        no_argument, &_opt.nSource, 1},
     {"testonly",      no_argument, &_opt.nTestOnly, 1},
     {"verbose",       no_argument, &_opt.nVerbose, 1},     //-v --verbose

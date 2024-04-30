@@ -85,6 +85,7 @@ TDNFReadConfig(
     pConf->nInstallOnlyLimit = 1;
     pConf->nCleanRequirementsOnRemove = 0;
     pConf->nKeepCache = 0;
+    pConf->pszSnapshotTime = NULL;
     pConf->nOpenMax = TDNF_DEFAULT_OPENMAX;
 
     register_ini(NULL);
@@ -121,6 +122,10 @@ TDNFReadConfig(
         if (strcmp(cn->name, TDNF_CONF_KEY_INSTALLONLY_LIMIT) == 0)
         {
             pConf->nInstallOnlyLimit = atoi(cn->value);
+        }
+        else if (strcmp(cn->name, TDNF_CONF_KEY_SNAPSHOT_TIME) == 0)
+        {
+            pConf->pszSnapshotTime = cn->value; //assumes your system's time_t is typedef long
         }
         else if (strcmp(cn->name, TDNF_CONF_KEY_CLEAN_REQ_ON_REMOVE) == 0)
         {
