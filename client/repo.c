@@ -99,7 +99,7 @@ TDNFInitRepo(
     pRepo->appdata = pSolvRepoInfo;
 
     if (pRepoData->nHasMetaData) {
-        if (pszSnapshotTime != NULL) {
+        if (!pRepoData->nExcludeSnapshot && pszSnapshotTime != NULL) {
             dwError = TDNFInitRepoFromMetadata(pRepo, pRepoData->pszId, pRepoMD, pszSnapshotTime);
             BAIL_ON_TDNF_ERROR(dwError);
         } else {

@@ -772,6 +772,12 @@ TDNFAlterRepoState(
     );
 
 uint32_t
+TDNFExcludeFromSnapshot(
+    PTDNF_REPO_DATA pRepos,
+    const char* pszId
+    );
+
+uint32_t
 TDNFCloneRepo(
     PTDNF_REPO_DATA pRepoIn,
     PTDNF_REPO_DATA* ppRepo

@@ -358,6 +358,7 @@ TDNFCreateRepo(
     BAIL_ON_TDNF_ERROR(dwError);
 
     pRepo->nEnabled = TDNF_REPO_DEFAULT_ENABLED;
+    pRepo->nExcludeSnapshot = 0;
     pRepo->nHasMetaData = 1;
     pRepo->nSkipIfUnavailable = TDNF_REPO_DEFAULT_SKIP;
     pRepo->nGPGCheck = TDNF_REPO_DEFAULT_GPGCHECK;
@@ -695,6 +696,12 @@ TDNFRepoListFinalize(
                           1,
                           pSetOpt->pszOptValue);
         }
+        else if (strcmp(pSetOpt->pszOptName, "excludesnapshot") == 0)
+        {
+            dwError = TDNFExcludeFromSnapshot(
+                pTdnf->pRepos,
+                pSetOpt->pszOptValue);
+        }
         BAIL_ON_TDNF_ERROR(dwError);
     }
 
@@ -780,6 +787,53 @@ TDNFAlterRepoState(
             }
         }
     }
+cleanup:
+    return dwError;
+
+error:
+    goto cleanup;
+}
+
+uint32_t
+TDNFExcludeFromSnapshot(
+    PTDNF_REPO_DATA pRepos,
+    const char* pszId
+    )
+{
+    uint32_t dwError = 0;
+    int nIsGlob = 0;
+    if(!pRepos && IsNullOrEmptyString(pszId))
+    {
+        dwError = ERROR_TDNF_INVALID_PARAMETER;
+        BAIL_ON_TDNF_ERROR(dwError);
+    }
+
+    nIsGlob = TDNFIsGlob(pszId);
+
+    for (int nMatch = 0; pRepos; pRepos = pRepos->pNext)
+    {
+        if(nIsGlob)
+        {
+            if(!fnmatch(pszId, pRepos->pszId, 0))
+            {
+                nMatch = 1;
+            }
+        }
+        else if(!strcmp(pRepos->pszId, pszId))
+        {
+            nMatch = 1;
+        }
+
+        if(nMatch)
+        {
+            pRepos->nExcludeSnapshot = 1;
+            if(!nIsGlob)
+            {
+                break;
+            }
+        }
+    }
+
 cleanup:
     return dwError;
 

@@ -276,6 +276,7 @@ typedef struct _TDNF_CONF
 typedef struct _TDNF_REPO_DATA
 {
     int nEnabled;
+    int nExcludeSnapshot;
     int nSkipIfUnavailable;
     int nGPGCheck;
     int nHasMetaData;
