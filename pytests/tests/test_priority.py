@@ -42,7 +42,7 @@ def test_priority(utils):
                     )
     assert ret['retval'] == 0
 
-    ret = utils.run(["createrepo", "."], cwd=REPODIR)
+    ret = utils.run(["createrepo", "--compatibility", "."], cwd=REPODIR)
     assert ret['retval'] == 0
 
     filename = os.path.join(utils.config['repo_path'], "yum.repos.d", REPOFILENAME)

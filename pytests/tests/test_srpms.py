@@ -19,7 +19,7 @@ DIST = os.environ.get('DIST')
 if DIST == 'fedora':
     RPMBUILD_DIR = '/root/rpmbuild'
 else:
-    RPMBUILD_DIR = '/usr/src/photon'
+    RPMBUILD_DIR = '/usr/src/azl'
 
 
 @pytest.fixture(scope='function', autouse=True)

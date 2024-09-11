@@ -66,6 +66,7 @@ def test_install_local_key(utils):
     set_gpgcheck(utils, True)
     keypath = os.path.join(utils.config['repo_path'], 'photon-test', 'keys', 'pubkey.asc')
     set_repo_key(utils, 'file://{}'.format(keypath))
+    utils.run(['rpm', '--import', keypath])
     pkgname = utils.config["sglversion_pkgname"]
     ret = utils.run(['tdnf', 'install', '-y', pkgname])
     assert ret['retval'] == 0
@@ -76,6 +77,8 @@ def test_install_local_key(utils):
 def test_install_remote_key(utils):
     set_gpgcheck(utils, True)
     set_repo_key(utils, 'http://localhost:8080/photon-test/keys/pubkey.asc')
+    keypath = os.path.join(utils.config['repo_path'], 'photon-test', 'keys', 'pubkey.asc')
+    utils.run(['rpm', '--import', keypath])
     pkgname = utils.config["sglversion_pkgname"]
     ret = utils.run(['tdnf', 'install', '-y', pkgname])
     assert ret['retval'] == 0
@@ -86,6 +89,8 @@ def test_install_remote_key(utils):
 def test_install_remote_key_verbose(utils):
     set_gpgcheck(utils, True)
     set_repo_key(utils, 'http://localhost:8080/photon-test/keys/pubkey.asc')
+    keypath = os.path.join(utils.config['repo_path'], 'photon-test', 'keys', 'pubkey.asc')
+    utils.run(['rpm', '--import', keypath])
     pkgname = utils.config["sglversion_pkgname"]
     ret = utils.run(['tdnf', 'install', '-v', '-y', pkgname])
     assert ret['retval'] == 0

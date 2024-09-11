@@ -65,8 +65,8 @@ mkdir -p -m 755 ${BUILD_PATH}/BUILD \
 cat << EOF > ${TEST_REPO_DIR}/gpgkeydata
      %echo Generating a key for repogpgcheck signatures
      %no-protection
-     Key-Type: default
-     Subkey-Type: default
+     Key-Type: RSA
+     Subkey-Type: RSA
      Name-Real: tdnf test
      Name-Comment: tdnf test key
      Name-Email: tdnftest@tdnf.test
@@ -107,9 +107,9 @@ cp -r ${BUILD_PATH}/RPMS ${PUBLISH_SHA512_PATH}
 mkdir -p ${PUBLISH_PATH}/keys
 gpg --armor --export tdnftest@tdnf.test > ${PUBLISH_PATH}/keys/pubkey.asc
 
-createrepo ${PUBLISH_PATH}
-createrepo ${PUBLISH_SRC_PATH}
-createrepo -s sha512 ${PUBLISH_SHA512_PATH}
+createrepo --compatibility ${PUBLISH_PATH}
+createrepo --compatibility ${PUBLISH_SRC_PATH}
+createrepo --compatibility -s sha512 ${PUBLISH_SHA512_PATH}
 
 modifyrepo ${REPO_SRC_DIR}/updateinfo-1.xml ${PUBLISH_PATH}/repodata
 check_err "Failed to modify repo with updateinfo-1.xml."
