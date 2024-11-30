@@ -1,14 +1,23 @@
 #!/bin/bash
+
 set -e
 
 rm -rf build
 mkdir -p build
 cd build || exit 1
 
-mkdir -p /usr/lib/sysimage/tdnf
-cmake -DHISTORY_DB_DIR=/usr/lib/sysimage/tdnf .. && make -j32 && make python -j32 && make check -j32 || exit
+JOBS=$(( ($(nproc)+1) / 2 ))
+HIST_DB_DIR="/usr/lib/sysimage/tdnf"
+
+{
+  mkdir -p ${HIST_DB_DIR}
+  cmake -DHISTORY_DB_DIR=${HIST_DB_DIR} ..
+  make -j${JOBS}
+  make python -j${JOBS}
+  make check -j${JOBS}
+} || exit 1
 
 if ! flake8 ../pytests ; then
-  echo "flake8 tests failed"
+  echo "ERROR: flake8 tests failed" >&2
   exit 1
 fi
