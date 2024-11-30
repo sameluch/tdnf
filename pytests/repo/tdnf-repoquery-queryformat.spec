@@ -21,8 +21,9 @@ depend on this in some way.
 %build
 
 %install
-mkdir -p %_topdir/%buildroot/usr/lib/repoquery
-touch %_topdir/%buildroot/usr/lib/repoquery/%name
+mkdir -p %{buildroot}/usr/lib/repoquery
+touch %{buildroot}/usr/lib/repoquery/%name
+
 %files
 /usr/lib/repoquery/%name
 

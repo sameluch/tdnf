@@ -16,8 +16,9 @@ Part of tdnf test spec. Two packages containing one identical file.
 %build
 
 %install
-mkdir -p %_topdir/%buildroot/usr/lib/conflict
-echo file > %_topdir/%buildroot/usr/lib/conflict/conflicting-file
+mkdir -p %{buildroot}/usr/lib/conflict
+echo file > %{buildroot}/usr/lib/conflict/conflicting-file
+
 %files
 /usr/lib/conflict/conflicting-file
 

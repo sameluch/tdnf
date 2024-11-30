@@ -20,8 +20,8 @@ Part of tdnf test spec. Basic install/remove/upgrade test
 %build
 
 %install
-mkdir -p %_topdir/%buildroot/lib/cleanreq/
-touch %_topdir/%buildroot/lib/cleanreq/%name
+mkdir -p %{buildroot}/lib/cleanreq/
+touch %{buildroot}/lib/cleanreq/%name
 
 %files
 /lib/cleanreq/%name

@@ -1,4 +1,4 @@
-FROM fedora:34
+FROM fedora:latest
 
 COPY ci/prep.sh /prep.sh
 RUN chmod +x /prep.sh

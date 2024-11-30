@@ -19,6 +19,7 @@ common_pkgs=(
   python3-pyOpenSSL
   python3-pytest
   python3-requests
+  python3-setuptools
   python3-urllib3
   rpm-build
   sed

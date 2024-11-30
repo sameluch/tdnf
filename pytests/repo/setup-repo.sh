@@ -8,22 +8,21 @@
 #
 
 if [ $# -ne 2 ]; then
-    echo "Usage: $0 <repo_path> <specs_dir>"
+    echo "Usage: $0 <repo_path> <specs_dir>" >&2
     exit 1
 fi
 
-function fix_dir_perms()
-{
+function fix_dir_perms() {
   chmod 755 ${TEST_REPO_DIR}
   find ${TEST_REPO_DIR} -type d -exec chmod 0755 {} \;
   find ${TEST_REPO_DIR} -type f -exec chmod 0644 {} \;
 }
 
 ## used to check return code for each command.
-function check_err {
-  rc=$?
+function check_err() {
+  local rc=$?
   if [ $rc -ne 0 ]; then
-      echo $1
+      echo "$1" >&2
       exit $rc
   fi
 }
@@ -37,7 +36,7 @@ fi
 
 REPO_SRC_DIR=$2
 if [ ! -d ${REPO_SRC_DIR} ]; then
-    echo "specs dir does not exist"
+    echo "ERROR: specs dir does not exist" >&2
     exit 1
 fi
 
@@ -58,21 +57,21 @@ mkdir -p -m 755 ${BUILD_PATH}/BUILD \
     ${TEST_REPO_DIR}/yum.repos.d \
     ${PUBLISH_PATH} \
     ${PUBLISH_SRC_PATH} \
-   ${PUBLISH_SHA512_PATH} \
+    ${PUBLISH_SHA512_PATH} \
     ${GNUPGHOME}
 
 #gpgkey data for unattended key generation
 cat << EOF > ${TEST_REPO_DIR}/gpgkeydata
-     %echo Generating a key for repogpgcheck signatures
-     %no-protection
-     Key-Type: default
-     Subkey-Type: default
-     Name-Real: tdnf test
-     Name-Comment: tdnf test key
-     Name-Email: tdnftest@tdnf.test
-     Expire-Date: 0
-     %commit
-     %echo done
+%echo Generating a key for repogpgcheck signatures
+%no-protection
+Key-Type: RSA
+Subkey-Type: RSA
+Name-Real: tdnf test
+Name-Comment: tdnf test key
+Name-Email: tdnftest@tdnf.test
+Expire-Date: 0
+%commit
+%echo done
 EOF
 
 #generate a key non interactively. this is used in testing
@@ -90,12 +89,11 @@ for d in conflicts enhances obsoletes provides recommends requires suggests supp
     sed s/@@dep@@/$d/ < ${REPO_SRC_DIR}/tdnf-repoquery-deps.spec.in > ${BUILD_PATH}/SOURCES/tdnf-repoquery-$d.spec
 done
 
-echo building packages
+echo "Building packages"
 for spec in ${REPO_SRC_DIR}/*.spec ${BUILD_PATH}/SOURCES/*.spec ; do
-    echo "building ${spec}"
-    rpmbuild  --define "_topdir ${BUILD_PATH}" \
-        -r ${BUILD_PATH} -ba ${spec} 2>&1
-    check_err "failed to build ${spec}"
+    echo "Building ${spec}"
+    rpmbuild -D "_topdir ${BUILD_PATH}" -ba ${spec} 2>&1
+    check_err "ERROR: failed to build ${spec}"
 done
 rpmsign --addsign ${BUILD_PATH}/RPMS/*/*.rpm
 check_err "Failed to sign built packages."

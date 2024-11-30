@@ -19,19 +19,12 @@ Part of tdnf test spec. Test bad install scripts.
 %build
 
 %install
-mkdir -p %_topdir/%buildroot/usr/bin
-cat << EOF >> %_topdir/%buildroot/usr/bin/bad-pre.sh
-#!/bin/sh
-# dummy script. Return false because we are bad.
-/bin/false
-EOF
 
 %pre
 # fail intentionally
-/bin/false
+%{_bindir}/false
 
 %files
-/usr/bin/bad-pre.sh
 
 %changelog
 *   Fri Apr 2 2021 Oliver Kurth <okurth@vmware.com> 1.0.0-1
