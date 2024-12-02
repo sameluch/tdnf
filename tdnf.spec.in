@@ -188,11 +188,7 @@ fi
 
 %triggerin -- motd
 [ $2 -eq 1 ] || exit 0
-if [ $1 -eq 1 ]; then
-  echo "detected install of %{name}/motd, enabling %{name}-cache-updateinfo.timer" >&2
-  systemctl enable %{name}-cache-updateinfo.timer >/dev/null 2>&1 || :
-  systemctl start %{name}-cache-updateinfo.timer >/dev/null 2>&1 || :
-elif [ $1 -eq 2 ]; then
+if [ $1 -eq 2 ]; then
   echo "detected upgrade of %{name}, daemon-reload" >&2
   systemctl daemon-reload >/dev/null 2>&1 || :
 fi
@@ -204,17 +200,10 @@ fi
 
 %triggerun -- motd
 [ $1 -eq 1 ] && [ $2 -eq 1 ] && exit 0
-echo "detected uninstall of %{name}/motd, disabling %{name}-cache-updateinfo.timer" >&2
-systemctl --no-reload disable %{name}-cache-updateinfo.timer >/dev/null 2>&1 || :
-systemctl stop %{name}-cache-updateinfo.timer >/dev/null 2>&1 || :
 rm -f /var/cache/%{name}/cached-updateinfo.txt
 
 %postun
 /sbin/ldconfig
-%triggerpostun -- motd
-[ $1 -eq 1 ] && [ $2 -eq 1 ] || exit 0
-echo "detected upgrade of %{name}/motd, restarting %{name}-cache-updateinfo.timer" >&2
-systemctl try-restart %{name}-cache-updateinfo.timer >/dev/null 2>&1 || :
 
 %post cli-libs
 /sbin/ldconfig
@@ -244,8 +233,6 @@ systemctl try-restart %{name}-cache-updateinfo.timer >/dev/null 2>&1 || :
 %{_libdir}/libtdnf.so.*
 %{_libexecdir}/tdnf/tdnf-history-util
 %config(noreplace) %{_sysconfdir}/tdnf/tdnf.conf
-%config %{_unitdir}/tdnf-cache-updateinfo.service
-%config(noreplace) %{_unitdir}/tdnf-cache-updateinfo.timer
 %config %{_sysconfdir}/motdgen.d/02-tdnf-updateinfo.sh
 %dir /var/cache/tdnf
 %{_datadir}/bash-completion/completions/tdnf
