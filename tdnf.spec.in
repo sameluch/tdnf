@@ -242,7 +242,7 @@ systemctl try-restart %{name}-cache-updateinfo.timer >/dev/null 2>&1 || :
 %{_bindir}/tdnf-config
 %{_bindir}/tdnf-cache-updateinfo
 %{_libdir}/libtdnf.so.*
-%{_libdir}/tdnf/tdnf-history-util
+%{_libexecdir}/tdnf/tdnf-history-util
 %config(noreplace) %{_sysconfdir}/tdnf/tdnf.conf
 %config %{_unitdir}/tdnf-cache-updateinfo.service
 %config(noreplace) %{_unitdir}/tdnf-cache-updateinfo.timer
