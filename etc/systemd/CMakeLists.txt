@@ -13,8 +13,6 @@ SET (systemd_FILES
      tdnf-automatic-notifyonly.timer
      tdnf-automatic-install.service
      tdnf-automatic-install.service
-     tdnf-automatic-install.timer
-     tdnf-cache-updateinfo.service
-     tdnf-cache-updateinfo.timer)
+     tdnf-automatic-install.timer)
 
 INSTALL (FILES ${systemd_FILES} DESTINATION ${SYSTEMD_DIR})
