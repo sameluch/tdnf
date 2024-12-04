@@ -230,7 +230,6 @@ rm -f %{_var}/cache/%{name}/cached-updateinfo.txt
 %{_bindir}/yum
 %{_bindir}/tdnfj
 %{_bindir}/%{name}-config
-%{_bindir}/%{name}-cache-updateinfo
 %{_libdir}/libtdnf.so.*
 %{_libexecdir}/%{name}/%{name}-history-util
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.conf
