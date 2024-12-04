@@ -1,6 +1,6 @@
-%define hist_db_dir     %{_sharedstatedir}/%{name}
+%define hist_db_dir     %{_libdir}/sysimage/%{name}
 %define history_db_fn   %{hist_db_dir}/history.db
-%define history_autoins %{hist_db_dir}/autoinstalled
+%define history_autoins %{_sharedstatedir}/%{name}/autoinstalled
 %define history_util    %{_libexecdir}/%{name}/%{name}-history-util
 %define _tdnfpluginsdir %{_libdir}/%{name}-plugins
 
