@@ -409,6 +409,7 @@ TDNFPkgInfoFilterNewest(
         {
             pPkgInfo->pNext = ppPkgInfos[i];
             pPkgInfo = ppPkgInfos[i];
+            pPkgInfo->pNext = NULL;
         }
     }
 
