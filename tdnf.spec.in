@@ -1,6 +1,5 @@
-%define hist_db_dir     %{_sharedstatedir}/%{name}
+%define hist_db_dir     %{_libdir}/sysimage/%{name}
 %define history_db_fn   %{hist_db_dir}/history.db
-%define history_autoins %{hist_db_dir}/autoinstalled
 %define history_util    %{_libexecdir}/%{name}/%{name}-history-util
 %define _tdnfpluginsdir %{_libdir}/%{name}-plugins
 
@@ -143,43 +142,36 @@ Requires:  %{name} = %{version}-%{release}
 Systemd units that can periodically download package upgrades and apply them.
 
 %prep
-%autosetup -p1 -n %{name}-%{version}
+%autosetup -p1
 
 %build
-mkdir -p build
-pushd build
-cmake \
+%{cmake} \
   -DCMAKE_BUILD_TYPE=Debug \
   -DCMAKE_INSTALL_PREFIX=%{_prefix} \
   -DCMAKE_INSTALL_LIBDIR=%{_libdir} \
   -DSYSTEMD_DIR=%{_unitdir} \
   ..
 
-%make_build
-%make_build python
-popd
+%{cmake_build}
+%make_build -C %{__cmake_builddir} python
 
 %install
-pushd build
-%make_install %{?_smp_mflags}
-popd
+%{cmake_install}
 
 mkdir -p %{buildroot}{%{_var}/cache/%{name},%{_unitdir}}
 ln -sv %{name} %{buildroot}%{_bindir}/tyum
 ln -sv %{name} %{buildroot}%{_bindir}/yum
 ln -sv %{name} %{buildroot}%{_bindir}/tdnfj
 
-pushd build/python
-python3 setup.py install --skip-build --prefix=%{_prefix} --install-lib=%{python3_sitelib} --root=%{buildroot}
+pushd %{__cmake_builddir}/python
+%py3_install
 popd
 
 find %{buildroot} \( -name '*.a' -o -name '*.pyc' \) -delete
 
-%if 0%{?with_check}
 %check
 pip3 install flake8
-%make_build -C build check
-%endif
+%make_build -C %{__cmake_builddir} check
 
 %post
 /sbin/ldconfig
@@ -192,9 +184,7 @@ pip3 install flake8
 # cannot use tdnf because that is still running even in postrans
 [ -d %{hist_db_dir} ] || mkdir -p %{hist_db_dir}
 [ -f %{history_db_fn} ] || %{history_util} init
-[ ! -f %{history_autoins} ] || exit 0
-%{history_util} mark remove $(cat %{history_autoins})
-mv %{history_autoins} %{history_autoins}.backup
+exit 0
 
 %triggerin -- motd
 [ $2 -eq 1 ] || exit 0
@@ -230,7 +220,6 @@ rm -f %{_var}/cache/%{name}/cached-updateinfo.txt
 %{_bindir}/yum
 %{_bindir}/tdnfj
 %{_bindir}/%{name}-config
-%{_bindir}/%{name}-cache-updateinfo
 %{_libdir}/libtdnf.so.*
 %{_libexecdir}/%{name}/%{name}-history-util
 %config(noreplace) %{_sysconfdir}/%{name}/%{name}.conf
