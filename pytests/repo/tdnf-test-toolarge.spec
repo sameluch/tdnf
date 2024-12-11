@@ -20,9 +20,9 @@ out of disk space error.
 %build
 
 %install
-mkdir -p %_topdir/%buildroot/lib/toolarge/
-touch %_topdir/%buildroot/lib/toolarge/largedata.txt
-dd if=/dev/urandom of=%_topdir/%buildroot/lib/toolarge/largedata.txt bs=1M count=1
+mkdir -p %{buildroot}/lib/toolarge/
+touch %{buildroot}/lib/toolarge/largedata.txt
+dd if=/dev/urandom of=%{buildroot}/lib/toolarge/largedata.txt bs=1M count=1
 
 %files
 /lib/toolarge/largedata.txt

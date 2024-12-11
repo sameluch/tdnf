@@ -20,8 +20,8 @@ Part of tdnf test spec. Basic install/remove/upgrade test
 
 # files should not conflict
 %install
-mkdir -p %_topdir/%buildroot/usr/share/multiinstall
-touch %_topdir/%buildroot/usr/share/multiinstall-%{release}
+mkdir -p %{buildroot}/usr/share/multiinstall
+touch %{buildroot}/usr/share/multiinstall-%{release}
 
 %files
 /usr/share/multiinstall-%{release}

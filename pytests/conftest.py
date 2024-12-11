@@ -193,6 +193,14 @@ class TestUtils(object):
             raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT),
                                     file_path)
 
+    def clear_directory(self, dir_path):
+        for item in os.listdir(dir_path):
+            item_path = os.path.join(dir_path, item)
+            if os.path.isfile(item_path) or os.path.islink(item_path):
+                os.unlink(item_path)
+            elif os.path.isdir(item_path):
+                shutil.rmtree(item_path)
+
     def check_package(self, package, version=None):
         ''' Check if a package exists '''
         ret = self.run(["tdnf", "--disablerepo=*", "list", "-j", "--installed", package])

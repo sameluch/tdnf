@@ -20,8 +20,8 @@ Part of tdnf test spec. Basic install/remove/upgrade test
 %build
 
 %install
-mkdir -p %_topdir/%buildroot/lib/systemd/system/
-cat << EOF >> %_topdir/%buildroot/lib/systemd/system/%{name}.service
+mkdir -p %{buildroot}/lib/systemd/system/
+cat << EOF >> %{buildroot}/lib/systemd/system/%{name}.service
 [Unit]
 Description=%{name} for arch related tests
 

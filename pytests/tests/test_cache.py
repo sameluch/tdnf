@@ -52,10 +52,6 @@ def switch_cache_path(utils, new_path):
     utils.edit_config({'cachedir': new_path})
 
 
-def clean_small_cache(utils):
-    utils.run(['rm', '-rf', utils.config['small_cache_path']])
-
-
 def try_mount_small_cache():
     import subprocess
     mount_script = subprocess.Popen(
@@ -218,15 +214,19 @@ def test_download_vs_cache_size_multiple_packages(utils):
     assert utils.floats_approx_equal(down_bytes, cached_rpm_bytes)
 
 
-@pytest.mark.skipif(try_mount_small_cache() != 0, reason="Failed to mount small cache directory.")
 def test_cache_directory_out_of_disk_space(utils):
+    if try_mount_small_cache():
+        print("Failed to mount small cache directory")
+        return
+
     small_cache_path = utils.config['small_cache_path']
     orig_cache_path = utils.tdnf_config.get('main', 'cachedir')
     switch_cache_path(utils, small_cache_path)
     enable_cache(utils)
-    clean_small_cache(utils)
+    # can't rm the dir because it's a mount point
+    utils.clear_directory(small_cache_path)
 
-    run_args = ['tdnf', 'install', '-y', '--nogpgcheck']
+    run_args = 'tdnf install -y --nogpgcheck'.split()
     pkg_list = [utils.config["toolarge_pkgname"]]
     for pkgname in pkg_list:
         utils.erase_package(pkgname)
@@ -235,7 +235,8 @@ def test_cache_directory_out_of_disk_space(utils):
 
     switch_cache_path(utils, orig_cache_path)
     clean_cache(utils)
-    clean_small_cache(utils)
+    utils.clear_directory(small_cache_path)
+    utils.run(f"umount {small_cache_path}".split())
     assert ret['retval'] == 1036
 
 
