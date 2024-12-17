@@ -432,3 +432,18 @@ def test_reposync_newest(utils):
     assert mulversion_pkgname_found
 
     shutil.rmtree(synced_dir)
+
+
+# reposync with --newest-only option caused an infinite loop
+def test_reposync_newest_multiplerepos(utils):
+    reponame = "photon-srpms"
+    workdir = WORKDIR
+    utils.makedirs(workdir)
+
+    ret = utils.run(['tdnf',
+                     '--enablerepo={}'.format(reponame),
+                     '--newest-only',
+                     '--urls',
+                     'reposync'],
+                    cwd=workdir)
+    assert ret['retval'] == 0
