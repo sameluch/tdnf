@@ -754,6 +754,37 @@ TDNFMarkAutoInstalled(
                 }
             }
         }
+        /* During upgrades, ppInfo->pPkgsToInstall contains any packages that are
+           in the ppszInstallOnlyPkgs which are installing a new version as a
+           part of the upgrade. This is because the they are queued up as install
+           as opposed to an upgraded package. These packages are always defaulted
+           to auto installed while they should maintain their previous install
+           type.
+        */
+        if (nFlag == 1 && pTdnf->pConf && pTdnf->pConf->ppszInstallOnlyPkgs)
+        {
+            for (int i = 0; pTdnf->pConf->ppszInstallOnlyPkgs[i]; i++)
+            {
+                if (strcmp(pTdnf->pConf->ppszInstallOnlyPkgs[i], pszName) == 0)
+                {
+                    // Lookup current auto install status, ensure matching status
+                    int value = 0;
+                    rc = history_get_auto_flag(pHistoryCtx, pszName, &value);
+                    if (rc != 0)
+                    {
+                        dwError = ERROR_TDNF_HISTORY_ERROR;
+                        BAIL_ON_TDNF_ERROR(dwError);
+                    }
+                    if (value == 0)
+                    {
+                        // Packages previously marked as user installed should
+                        // remain user installed.
+                        nFlag = 0;
+                        break;
+                    }
+                }
+            }
+        }
         if (!nAutoOnly || nFlag == 1)
         {
             int rc = history_set_auto_flag(pHistoryCtx, pszName, nFlag);
